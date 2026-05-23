@@ -1,7 +1,7 @@
 #!/bin/bash
 source config
 
-./docker/compile.sh
+./docker/compile.sh "$@"
 
 # DOCKER_IMG_PREFIX
 DOCKER_TARGET="runner"

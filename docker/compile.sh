@@ -20,7 +20,7 @@ docker run --rm -it \
   -v "$(pwd):/workspace" \
   -w /workspace \
   "$DOCKER_FULL_IMG_NAME" \
-  bash -lc "./docker/start.sh"
+  bash "./docker/start.sh" "$@"
 
 compilation_status=$?
 docker container prune -f
