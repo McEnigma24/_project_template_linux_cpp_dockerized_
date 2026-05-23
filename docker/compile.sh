@@ -15,7 +15,7 @@ docker build --target "$DOCKER_TARGET" -t "$DOCKER_FULL_IMG_NAME" .
 docker image prune -f
 
 # RUN #
-clear
+clear; clear_dir "$DIR_LOG"
 docker run --rm -it \
   -v "$(pwd):/workspace" \
   -w /workspace \

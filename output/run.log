@@ -1,7 +1,0 @@
-
-TIME_STAMP: It just works                                      16:26:35 (+ 76us 867ns )
-_src/main.cpp:16 - CORE::str::to_lower_case("Hello, World!") = hello, world!
-test: 0.0gb 0.0mb 0.4kb 400b 
-test: 0.0gb 0.0mb 40.0kb 40000b 
-123`456`789
-1`234`567.891230

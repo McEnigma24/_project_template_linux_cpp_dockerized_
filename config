@@ -45,8 +45,8 @@ export DIR_SCRIPTS="scripts"
 export DIR_LOG="log"
 export DIR_RUN_TIME_CONFIG="run_time_config"
 
-export LOG_start="$DIR_ROOT/$DIR_OUTPUT/start.log"
-export LOG_run="$DIR_ROOT/$DIR_OUTPUT/run.log"
+export LOG_start="$DIR_ROOT/$DIR_LOG/start.log"
+export LOG_run="$DIR_ROOT/$DIR_LOG/run.log"
 export PATH_DONE_install="${DIR_RUN_TIME_CONFIG}/DONE_installed.txt"
 
 # works only if sourcing is done for every script       #
