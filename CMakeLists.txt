@@ -66,9 +66,7 @@ FetchContent_MakeAvailable(core)
 set(ALL_LIBRARIES ${ALL_LIBRARIES} core)
 include_directories(${core_SOURCE_DIR}/_inc)
 
-# add_subdirectory(external/core)
-# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/core/_inc)
-# set(ALL_LIBRARIES ${ALL_LIBRARIES} core)
+
 
 # EXAMPLE - ssd1306 #
 # include(FetchContent)
