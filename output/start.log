@@ -1,0 +1,29 @@
+
+Build (1/5) - Cleaning env
+
+Build (2/5) - Preparing env
+
+Build (3/5) - Building
+CMake Warning at build/_deps/core-src/CMakeLists.txt:45 (message):
+  Building library
+
+
+CMake Warning at CMakeLists.txt:107 (message):
+  Building exe
+
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /workspace/build
+Consolidate compiler generated dependencies of target core
+[ 66%] Built target core
+Consolidate compiler generated dependencies of target cpp_side.exe
+[ 83%] Linking CXX executable cpp_side.exe
+[100%] Built target cpp_side.exe
+
+
+Build (4/5) - Testing ❌
+
+
+Build (5/5) - Copying to exe ✅
+
