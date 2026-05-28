@@ -30,7 +30,7 @@ PACKAGES=(
 # echo "dirname ... (katalog pliku, bez nazwy pliku):"$'\t\t'" ->$(dirname "${BASH_SOURCE[0]}")<-"
 # echo "cd ... && pwd (kanoniczna ścieżka absolutna katalogu pliku):"$'\t\t'"->$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)<-"
 # can be called from any directory -> always gets the WORKING_DIR correct
-export DIR_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export DIR_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && realpath .)" # od pwd
 _img_path="${DIR_ROOT#/}"
 # Docker tag / image name: only [a-z0-9-] after lowercasing; map everything else to '-'.
 _filter="$(printf '%s' "$_img_path" | LC_ALL=C tr -c 'a-zA-Z0-9' '-' | tr -s '-')"
@@ -45,7 +45,7 @@ export DIR_SCRIPTS="scripts"
 export DIR_LOG="log"
 export DIR_RUN_TIME_CONFIG="run_time_config"
 
-export LOG_start="$DIR_ROOT/$DIR_LOG/start.log"
+export LOG_container_compile="$DIR_ROOT/$DIR_LOG/start.log"
 export LOG_run="$DIR_ROOT/$DIR_LOG/run.log"
 export PATH_DONE_install="${DIR_RUN_TIME_CONFIG}/DONE_installed.txt"
 
