@@ -20,21 +20,21 @@ clear; # clearing docker build logs
 clear_dir "$DIR_OUTPUT"; mkdir -p "$(dirname "$LOG_run")"; : > "$LOG_run"
 set +euo pipefail # allowing script to run after errors
 
-container_id="$(docker run -d --rm \
+container_id="$(docker run -d \
   "$DOCKER_FULL_IMG_NAME" \
   bash -lc 'exec /app/build/*.exe')"
 
-docker logs -f "$container_id" &> "$LOG_run" &
+stdbuf -oL docker logs -f "$container_id" 2>&1 | tee "$LOG_run" &
 logs_pid=$!
 
 run_status="$(docker wait "$container_id")"
-wait "$logs_pid" 2>/dev/null || true
+wait "$logs_pid" &>/dev/null
 
-docker container prune -f
+docker rm -f "$container_id" &>/dev/null
+docker container prune -f &>/dev/null
 
 
-clear #
-echo -en "\n\n"
+echo -en "\n\n" | tee -a "$LOG_run"
 if [ "$run_status" -eq 0 ]; then
   echo "✅ SUCCESS" | tee -a "$LOG_run"
 else

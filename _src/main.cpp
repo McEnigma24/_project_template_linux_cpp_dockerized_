@@ -24,6 +24,14 @@ int main(int argc, char* argv[])
     cout << CORE::format_number(num) << endl;
     cout << CORE::format_number(num2) << endl;
 
+
+    for (int i = 0; i < 10; i++)
+    {
+        var(rand());
+        cout.flush();
+        sleep(300);
+    }
+
     return 0;
 }
 #endif
