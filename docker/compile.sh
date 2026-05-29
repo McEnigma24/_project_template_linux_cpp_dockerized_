@@ -21,7 +21,7 @@ docker run --rm -it \
   -v "$(pwd):/workspace" \
   -w /workspace \
   "$DOCKER_FULL_IMG_NAME" \
-  bash "./docker/container_compile.sh" "$@"
+  bash "./docker/_container_compile.sh" "$@"
 
 compilation_status=$?
 docker container prune -f

@@ -10,7 +10,8 @@ int main(int argc, char* argv[])
 {
     srand(time(NULL));
     // CORE::clear_terminal(); // tests will NOT be VISIBLE with this line
-    time_stamp("It just works");
+    line("It just works");
+    time_stamp("It just works - timestamped");
 
     CORE::str::split_string("Hello World!", ' ');
     var(CORE::str::to_lower_case("Hello, World!"));

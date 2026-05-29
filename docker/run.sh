@@ -17,7 +17,7 @@ docker image prune -f
 
 # RUN #
 clear; # clearing docker build logs
-clear_dir "$DIR_OUTPUT"; mkdir -p "$(dirname "$LOG_run")"; : > "$LOG_run"
+clear_dir "$DIR_OUTPUT";
 set +euo pipefail # allowing script to run after errors
 
 container_id="$(docker run -d \
