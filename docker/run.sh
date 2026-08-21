@@ -1,7 +1,7 @@
 #!/bin/bash
 source config
 
-./docker/compile.sh "$@"
+./docker/compile.sh "$@" || exit 1
 
 # DOCKER_IMG_PREFIX
 DOCKER_TARGET="runner"
@@ -37,6 +37,8 @@ docker container prune -f &>/dev/null
 echo -en "\n\n" | tee -a "$LOG_run"
 if [ "$run_status" -eq 0 ]; then
   echo "✅ SUCCESS" | tee -a "$LOG_run"
+  exit 0
 else
   echo "❌ FAILED" | tee -a "$LOG_run"
+  exit 1
 fi

@@ -31,6 +31,8 @@ clear # clearing normal cmake build logs ->
 cat $LOG_container_compile && echo -e "\n"
 if [ $compilation_status -eq 0 ]; then
   echo "✅ SUCCESS"
+  exit 0
 else
   echo "❌ FAILED"
+  exit 1
 fi
