@@ -1,7 +1,15 @@
 # ==========================================
+# 0. BAZA
+# ==========================================
+# tag 'latest' na Docker Hub zawsze wskazuje najnowsze Ubuntu LTS
+# przypięcie konkretnej wersji (reprodukowalny build):
+#   docker build --build-arg UBUNTU_TAG=26.04 ...
+ARG UBUNTU_TAG=latest
+
+# ==========================================
 # 1. WARSTWA: RUNTIME BASE (common ground)
 # ==========================================
-FROM ubuntu:22.04 AS runtime-base
+FROM ubuntu:${UBUNTU_TAG} AS runtime-base
 ENV DEBIAN_FRONTEND=noninteractive \
     NEEDRESTART_MODE=a \
     TERM=xterm-256color
@@ -10,7 +18,10 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y --no-install-recommends ca-certificates
 RUN apt-get install -y --no-install-recommends libssl3
 RUN apt-get install -y --no-install-recommends libcurl4
-RUN apt-get install -y --no-install-recommends libprotobuf23
+# nazwa runtime-owego protobuf-a zawiera SONAME (22.04 -> libprotobuf23, 26.04 -> libprotobuf32t64),
+# więc bierzemy ją z zależności pakietu -dev zamiast wpisywać na sztywno
+RUN apt-get install -y --no-install-recommends \
+    "$(apt-cache depends libprotobuf-dev | awk '/Depends: libprotobuf[0-9]/{print $2; exit}')"
 RUN apt-get install -y --no-install-recommends libgomp1
 RUN apt-get install -y --no-install-recommends zlib1g
 RUN rm -rf /var/lib/apt/lists/*
@@ -29,7 +40,7 @@ RUN apt-get install -y --no-install-recommends build-essential
 RUN apt-get install -y --no-install-recommends gcc
 RUN apt-get install -y --no-install-recommends g++
 RUN apt-get install -y --no-install-recommends clang
-RUN apt-get install -y --no-install-recommends libstdc++-11-dev
+# libstdc++-*-dev celowo nie jest wpisany - g++ ciągnie wersję zgodną ze swoim GCC
 RUN apt-get install -y --no-install-recommends libomp-dev
 RUN apt-get install -y --no-install-recommends libbenchmark-dev
 RUN apt-get install -y --no-install-recommends libcurl4-openssl-dev

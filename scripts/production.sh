@@ -15,12 +15,12 @@ function build_all()
 
     if [ "$FLAG_TESTING_ACTIVE" == "Yes" ]; then
     {
-        CMAKE_FLAGS="$CMAKE_FLAGS -DTEMPLATE___CTEST_ACTIVE=ON"
+        CMAKE_FLAGS="$CMAKE_FLAGS -DCTEST_ACTIVE=ON"
     }
     fi
     if [ "$FLAG_BUILDING_LIBRARY" == "Yes" ]; then
     {
-        CMAKE_FLAGS="$CMAKE_FLAGS -DTEMPLATE___BUILD_LIBRARY=ON"
+        CMAKE_FLAGS="$CMAKE_FLAGS -DBUILD_LIBRARY=ON"
     }
     fi
 

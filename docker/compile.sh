@@ -18,6 +18,7 @@ docker image prune -f
 clear; # clearing docker build logs
 clear_dir "$DIR_LOG"; set +euo pipefail # allowing script to run after errors
 docker run --rm -it \
+  "${DOCKER_HOST_USER[@]}" \
   -v "$(pwd):/workspace" \
   -w /workspace \
   "$DOCKER_FULL_IMG_NAME" \

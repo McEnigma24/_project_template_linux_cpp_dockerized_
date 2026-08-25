@@ -15,7 +15,6 @@ PACKAGES=(
     build-essential
     gcc
     g++
-    libstdc++-11-dev
     clang
     libomp-dev
     libbenchmark-dev
@@ -55,6 +54,11 @@ export CALLING_ARGUMENTS="$@"
 # ONLY FOR REFERENCE # just use -> "$@"
 
 export PATH_LAST_ARCH_MARKER="$DIR_ROOT/.last_arch_marker"
+
+# kontenery z bind-mountem muszą działać jako użytkownik hosta, inaczej wszystko
+# co utworzą w mouncie (build/, exe/, external/) należy na hoście do root-a
+# HOME - kontener nie ma /etc/passwd dla tego UID, więc cmake/git potrzebują zapisywalnego HOME
+DOCKER_HOST_USER=(--user "$(id -u):$(id -g)" --env HOME=/tmp)
 
 
 function silent_come_back() { cd - > /dev/null; };                              export -f silent_come_back

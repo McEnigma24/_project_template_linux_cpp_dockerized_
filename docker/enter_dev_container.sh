@@ -18,6 +18,7 @@ docker image prune -f
 clear; # clearing docker build logs
 set +euo pipefail # not needed but, clears container if it run failes (no chance)
 docker run --rm -it \
+  "${DOCKER_HOST_USER[@]}" \
   -v "$(pwd):/workspace" \
   -w /workspace \
   "$DOCKER_FULL_IMG_NAME"

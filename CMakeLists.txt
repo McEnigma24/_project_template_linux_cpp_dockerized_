@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 4.2)
 project(MyProject LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -22,10 +22,6 @@ aux_source_directory(_test TEST_SOURCES)
 
 string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 add_definitions(-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE})
-
-# Change names of:
-# CTEST_ACTIVE
-# BUILD_LIBRARY
 
 set(CONST_TARGET_NAME "TEMPLATE")
 
@@ -91,7 +87,17 @@ include_directories(${core_SOURCE_DIR}/_inc)
 
 
 
-option(BUILD_LIBRARY "Build library instead of executable" OFF) # default value - could be overwritten by provided FLAG
+# Flagi buildu deklarujemy tylko wtedy, gdy to MY jesteśmy korzeniem drzewa CMake.
+# option() zawsze ląduje w globalnym cache (block() tego nie zmienia - obejmuje wyłącznie
+# zmienne zwykłe), więc podprojekt o tej samej nazwie dzieliłby wpis z projektem nadrzędnym.
+# Ten guard zastępuje dawne prefiksowanie nazw per projekt (TEMPLATE___, CORE___).
+if(PROJECT_IS_TOP_LEVEL)
+    option(BUILD_LIBRARY "Build library instead of executable" OFF) # default value - could be overwritten by provided FLAG
+    option(CTEST_ACTIVE "Testing is active" OFF)                    # default value - could be overwritten by provided FLAG
+else()
+    set(BUILD_LIBRARY OFF)
+    set(CTEST_ACTIVE OFF)
+endif()
 
 if(BUILD_LIBRARY)
     message(WARNING "Building library")
@@ -110,8 +116,6 @@ else()
     # set_target_properties(${TARGET_NAME} PROPERTIES ${COMPILE_FLAGS} ${LINK_FLAGS})
     target_link_libraries(${TARGET_NAME} PUBLIC ${ALL_LIBRARIES})
 endif()
-
-option(CTEST_ACTIVE "Testing is active" OFF)  # default value - could be overwritten by provided FLAG
 
 if(CTEST_ACTIVE)
     message(WARNING "TESTING...")
