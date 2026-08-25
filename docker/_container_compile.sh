@@ -29,6 +29,7 @@ function env_prep()
     create_dir "$DIR_LOG"
     create_dir "$DIR_OUTPUT"
     create_dir "$DIR_RUN_TIME_CONFIG"
+    create_dir "$DIR_BENCH_RESULTS"
 
     chmod +x scripts/*.sh
 

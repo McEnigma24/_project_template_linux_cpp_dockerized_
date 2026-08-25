@@ -49,7 +49,15 @@ RUN apt-get install -y --no-install-recommends libprotobuf-dev
 RUN apt-get install -y --no-install-recommends protobuf-compiler
 RUN apt-get install -y --no-install-recommends git
 RUN apt-get install -y --no-install-recommends ca-certificates
+# python + matplotlib tylko po to, żeby rysować wykresy z JSON-a Google Benchmark
+# (z apt-a, nie z pip-a - Ubuntu blokuje instalacje do systemowego pythona, PEP 668)
+RUN apt-get install -y --no-install-recommends python3
+RUN apt-get install -y --no-install-recommends python3-matplotlib
 RUN rm -rf /var/lib/apt/lists/*
+
+# kontener chodzi jako użytkownik hosta i nie ma swojego $HOME w obrazie,
+# więc matplotlib musi dostać jawnie zapisywalny katalog na cache
+ENV MPLCONFIGDIR=/tmp/matplotlib
 
 WORKDIR /workspace
 

@@ -59,7 +59,13 @@ function run_tests()
     elif [ "$FLAG_BENCHMARK_ACTIVE" == "Yes" ]; then
     {
         echo -e " ✅\n";
-        if ! ./bench.bexe; then exit 1; fi
+        # ścieżki absolutne, bo jesteśmy w $DIR_BUILD
+        if ! ./bench.bexe --benchmark_out="$PATH_BENCH_JSON" --benchmark_out_format=json; then exit 1; fi
+
+        # wykres to dodatek do pomiarów - jak matplotlib padnie, build nie ma prawa się wywalić
+        if ! python3 "$DIR_ROOT/$DIR_SCRIPTS/bench_plot.py" "$PATH_BENCH_JSON" "$PATH_BENCH_PLOT"; then
+            echo -e "\nproduction.sh - WARNING - unable to PLOT benchmark results\n"
+        fi
     }
     else
     {

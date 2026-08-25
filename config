@@ -43,9 +43,13 @@ export DIR_EXTERNAL="external"
 export DIR_SCRIPTS="scripts"
 export DIR_LOG="log"
 export DIR_RUN_TIME_CONFIG="run_time_config"
+# wyniki benchmarków nie mogą siedzieć w log/ ani output/ - te są czyszczone przy każdym compile/run
+export DIR_BENCH_RESULTS="_bench/results"
 
 export LOG_container_compile="$DIR_ROOT/$DIR_LOG/start.log"
 export LOG_run="$DIR_ROOT/$DIR_LOG/run.log"
+export PATH_BENCH_JSON="$DIR_ROOT/$DIR_BENCH_RESULTS/bench.json"
+export PATH_BENCH_PLOT="$DIR_ROOT/$DIR_BENCH_RESULTS/bench.png"
 export PATH_DONE_install="${DIR_RUN_TIME_CONFIG}/DONE_installed.txt"
 
 # works only if sourcing is done for every script       #
