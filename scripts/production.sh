@@ -18,6 +18,11 @@ function build_all()
         CMAKE_FLAGS="$CMAKE_FLAGS -DCTEST_ACTIVE=ON"
     }
     fi
+    if [ "$FLAG_BENCHMARK_ACTIVE" == "Yes" ]; then
+    {
+        CMAKE_FLAGS="$CMAKE_FLAGS -DBENCH_ACTIVE=ON"
+    }
+    fi
     if [ "$FLAG_BUILDING_LIBRARY" == "Yes" ]; then
     {
         CMAKE_FLAGS="$CMAKE_FLAGS -DBUILD_LIBRARY=ON"
@@ -36,12 +41,25 @@ function build_all()
 }
 function run_tests()
 {
-    cd $DIR_ROOT; echo -ne "\nBuild (4/5) - Testing"; cd $DIR_BUILD;
+    cd $DIR_ROOT;
+
+    if [ "$FLAG_BENCHMARK_ACTIVE" == "Yes" ]; then
+        echo -ne "\nBuild (4/5) - Benchmarking"
+    else
+        echo -ne "\nBuild (4/5) - Testing"
+    fi
+
+    cd $DIR_BUILD;
 
     if [ "$FLAG_TESTING_ACTIVE" == "Yes" ]; then
     {
         echo -e " ✅\n";
         if ! ctest --rerun-failed --output-on-failure; then exit 1; fi
+    }
+    elif [ "$FLAG_BENCHMARK_ACTIVE" == "Yes" ]; then
+    {
+        echo -e " ✅\n";
+        if ! ./bench.bexe; then exit 1; fi
     }
     else
     {

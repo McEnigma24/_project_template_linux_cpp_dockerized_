@@ -36,7 +36,7 @@ function env_prep()
     #                                        # nawet jeśli po zbudowaniu odtwarzałem je do poprzednich wartości
 
     # 1. Pętla getopts
-    while getopts "ctl" opt; do
+    while getopts "ctlb" opt; do
     case "$opt" in
         c)
             # just clean the env #       single makes exe -> ct cleans test, cl cleans lib
@@ -64,12 +64,33 @@ function env_prep()
             }
             break
         ;;
+        b)
+            # Benchmarking #
+            {
+                MARKER="BENCH"
+                [ "$( cat "$PATH_LAST_ARCH_MARKER" )" != "$MARKER" ] && clear_dir "$DIR_BUILD" && echo "$MARKER" > $PATH_LAST_ARCH_MARKER
+
+                export FLAG_BENCHMARK_ACTIVE="Yes"
+            }
+            break
+        ;;
         \?)
         echo "Error: $0 getopts switch -$OPTARG" >&2
         exit 1
         ;;
     esac
     done
+
+    # Brak -t/-l to też osobna architektura buildu (zwykłe exe) i też potrzebuje markera.
+    # Bez tego po poprzednim -t/-l w CMakeCache.txt zostaje stary wybór celu i zwykły build
+    # po cichu produkuje bibliotekę zamiast exe - widać to dopiero na "cp build/*.exe".
+    if [ -z "$FLAG_TESTING_ACTIVE" ] && [ -z "$FLAG_BUILDING_LIBRARY" ] && [ -z "$FLAG_BENCHMARK_ACTIVE" ]; then
+        MARKER="EXE"
+        if [ "$( cat "$PATH_LAST_ARCH_MARKER" 2>/dev/null )" != "$MARKER" ]; then
+            clear_dir "$DIR_BUILD"
+            echo "$MARKER" > "$PATH_LAST_ARCH_MARKER"
+        fi
+    fi
 
     # Usuń przetworzone opcje z listy argumentów #
     shift $((OPTIND -1))

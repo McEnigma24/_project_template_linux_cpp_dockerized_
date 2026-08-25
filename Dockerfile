@@ -54,15 +54,11 @@ RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /workspace
 
 # ==========================================
-# 3. ETAP: BUILD
+# 3. ETAP: RUNNER (wariant izolowany)
 # ==========================================
-FROM dev-env AS builder
-# -v "$(pwd):/workspace"
-CMD ["/bin/sh", "-c", "exec ./docker/start.sh"]
-
-# ==========================================
-# 4. ETAP: RUNNER
-# ==========================================
+# Wszystko wkopiowane do obrazu, więc odpala się gdziekolwiek -> docker/run_isolated.sh
+# Wariant "na repo" (mount jak w dev-env) nie ma tu swojego etapu,
+# bo używa gołego runtime-base -> docker/run.sh
 FROM runtime-base AS runner
 WORKDIR /app
 

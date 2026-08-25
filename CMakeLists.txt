@@ -17,6 +17,10 @@ aux_source_directory(_src TEST_SOURCES)
 list(FILTER TEST_SOURCES EXCLUDE REGEX ".*main\\.cpp")
 aux_source_directory(_test TEST_SOURCES)
 
+aux_source_directory(_src BENCH_SOURCES)
+list(FILTER BENCH_SOURCES EXCLUDE REGEX ".*main\\.cpp")
+aux_source_directory(_bench BENCH_SOURCES)
+
 
 # MACRO FOR LOGS # - dont show the whole realpath to file
 
@@ -94,9 +98,11 @@ include_directories(${core_SOURCE_DIR}/_inc)
 if(PROJECT_IS_TOP_LEVEL)
     option(BUILD_LIBRARY "Build library instead of executable" OFF) # default value - could be overwritten by provided FLAG
     option(CTEST_ACTIVE "Testing is active" OFF)                    # default value - could be overwritten by provided FLAG
+    option(BENCH_ACTIVE "Benchmarking is active" OFF)              # default value - could be overwritten by provided FLAG
 else()
     set(BUILD_LIBRARY OFF)
     set(CTEST_ACTIVE OFF)
+    set(BENCH_ACTIVE OFF)
 endif()
 
 if(BUILD_LIBRARY)
@@ -128,6 +134,7 @@ if(CTEST_ACTIVE)
         GIT_REPOSITORY https://github.com/google/googletest.git
         GIT_TAG        v1.14.0  # możesz zmienić tag na nowszy gdy będzie dostępny
         GIT_SHALLOW    TRUE
+        UPDATE_DISCONNECTED ON
     )
     # For Windows: Prevent overriding the parent project's compiler/linker settings
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -141,4 +148,25 @@ if(CTEST_ACTIVE)
     # Rejestracja testów
     include(GoogleTest)
     gtest_discover_tests(${TEST_EXE_NAME})
+endif()
+
+if(BENCH_ACTIVE)
+    message(WARNING "BENCHMARKING...")
+
+    include(FetchContent)
+    FetchContent_Declare(
+        benchmark
+        GIT_REPOSITORY https://github.com/google/benchmark.git
+        GIT_TAG        v1.9.5
+        GIT_SHALLOW    TRUE
+        UPDATE_DISCONNECTED ON
+    )
+    # bez tego benchmark buduje własne testy i zaciąga do nich googletesta
+    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+    set(BENCHMARK_ENABLE_WERROR  OFF CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(benchmark)
+
+    set(BENCH_EXE_NAME "bench.bexe")
+    add_executable(${BENCH_EXE_NAME} ${BENCH_SOURCES})
+    target_link_libraries(${BENCH_EXE_NAME} PRIVATE benchmark::benchmark ${ALL_LIBRARIES})
 endif()

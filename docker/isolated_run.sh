@@ -1,18 +1,15 @@
 #!/bin/bash
 source config
 
-# Wariant "na repo": kontener dostaje dokładnie ten sam mount co dev-env i uruchamia
-# binarkę, która już leży w repo. input/, output/ i log/ to te prawdziwe katalogi
-# z dysku, więc widać efekty od razu, bez wchodzenia do obrazu.
-# Wariant izolowany (wszystko wkopiowane do obrazu) -> docker/run_isolated.sh
+# Wariant przenośny: binarka, input/ i run_time_config/ są wkopiowane do obrazu,
+# więc kontener odpala się gdziekolwiek, bez repo pod ręką. Zapisy do output/
+# zostają w środku kontenera i giną razem z nim.
+# Wariant "na repo" (mount jak w dev-env) -> docker/run.sh
 
 ./docker/compile.sh "$@" || exit 1
 
-# Obraz to gołe runtime-base, czyli to samo środowisko co runner, tylko bez COPY.
-# Dzięki temu nie trzeba przebudowywać obrazu po każdej zmianie kodu,
-# a binarka i tak startuje wyłącznie na bibliotekach runtime (bez toolchainu).
 # DOCKER_IMG_PREFIX
-DOCKER_TARGET="runtime-base"
+DOCKER_TARGET="runner"
 DOCKER_FULL_IMG_NAME="${DOCKER_IMG_PREFIX}${DOCKER_TARGET}"
 
 
@@ -28,18 +25,9 @@ clear; # clearing docker build logs
 clear_dir "$DIR_OUTPUT";
 set +euo pipefail # allowing script to run after errors
 
-if ! ls "$DIR_TARGET"/*.exe > /dev/null 2>&1; then
-  echo "❌ FAILED - brak binarki w $DIR_TARGET/ (flaga -l buduje bibliotekę, nie ma czego uruchomić)"
-  exit 1
-fi
-
 container_id="$(docker run -d \
-  "${DOCKER_HOST_USER[@]}" \
-  -v "$(pwd):/workspace" \
-  -w /workspace \
-  --env LD_LIBRARY_PATH="/workspace/$DIR_BUILD" \
   "$DOCKER_FULL_IMG_NAME" \
-  bash -lc "exec ./$DIR_TARGET/*.exe")"
+  bash -lc 'exec /app/build/*.exe')"
 
 stdbuf -oL docker logs -f "$container_id" 2>&1 | tee "$LOG_run" &
 logs_pid=$!
