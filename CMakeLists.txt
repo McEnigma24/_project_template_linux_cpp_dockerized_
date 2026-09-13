@@ -59,6 +59,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/McEnigma24/CORE_lib.git
     GIT_TAG        main # lub inny tag/commit
     GIT_SHALLOW    TRUE
+    GIT_SUBMODULES_RECURSE TRUE
     UPDATE_DISCONNECTED ON
 )
 FetchContent_MakeAvailable(core)
